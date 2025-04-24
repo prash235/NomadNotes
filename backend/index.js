@@ -28,35 +28,64 @@ app.post("/create-account", async (req, res) => {
     res.status(400).json({ error: true, message: "User already exists" });
   }
 
-  const hashedPassword = await bcrypt.hash(password,10)
+  const hashedPassword = await bcrypt.hash(password, 10);
 
   const user = new User({
     fullName,
     email,
-    password:hashedPassword
-  })
+    password: hashedPassword,
+  });
 
-  await user.save()
+  await user.save();
 
   const accessToken = jwt.sign(
-    {userId: user._id},
+    { userId: user._id },
     process.env.ACCESS_TOKEN_SECRET,
     {
-        expiresIn:"72h"
+      expiresIn: "72h",
     }
-
-  )
+  );
 
   return res.status(201).json({
     error: false,
-    user : {fullName: user.fullName, email: user.email},
+    user: { fullName: user.fullName, email: user.email },
     accessToken,
-    message: "registration Successful"
-  })
+    message: "registration Successful",
+  });
+});
 
+app.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+  if (!email || !password) {
+    res
+      .status(400)
+      .json({ error: true, message: "emailid and password are required" });
+  }
 
+  const user = await User.findOne({ email });
+  if (!user) {
+    res.status(400).json({ error: true, message: "user not exists" });
+  }
 
+  const isPasswordValid = await bcrypt.compare(password, user.password);
+  if (!isPasswordValid) {
+    res.status(400).json({ error: true, message: "invalid credentials" });
+  }
 
+  const accessToken = jwt.sign(
+    { userId: user._id },
+    process.env.ACCESS_TOKEN_SECRET,
+    {
+      expiresIn: "72h",
+    }
+  );
+
+  return res.json({
+    error: false,
+    message: "Login succesful ",
+    user: { fullName: user.fullName, email: user.email },
+    accessToken,
+  });
 });
 
 app.listen(8000);
