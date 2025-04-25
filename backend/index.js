@@ -144,6 +144,23 @@ app.post("/add-travel-story",authenticateToken,async (req, res) => {
 
 })
 
+app.get("/get-all-stories",authenticateToken,async (req, res) => {
+  const {userId} = req.user
+  // const isUser = await User.findOne({_id:userId})
+
+  try {
+    const travelstories = await TravelStory.find({ userId: userId }).sort({
+      isFavourite : -1
+    })
+    console.log(travelstories)
+    return res.status(200).json({
+      stories: travelstories
+    });
+  } catch (error) {
+    res.status(500).json({ error: true, message: error.message });
+  }
+})
+
 
 app.listen(8000, () => {
   console.log("✨ Magic happens on port 8000 ✨");
