@@ -6,6 +6,7 @@ const express = require("express");
 const cors = require("cors");
 
 const jwt = require("jsonwebtoken");
+const {authenticateToken} = require("./utils")
 
 const app = express();
 app.use(express.json());
@@ -15,6 +16,12 @@ app.use(cors({ origin: "*" }));
 const User = require("./models/user.model");
 
 mongoose.connect(config.connectionString);
+
+app.get("/hell", async (req, res) => {
+
+    res.status(400).json({ error: true, message: "All fields are mandatory" });
+  
+})
 
 app.post("/create-account", async (req, res) => {
   const { fullName, email, password } = req.body;
@@ -88,5 +95,24 @@ app.post("/login", async (req, res) => {
   });
 });
 
-app.listen(8000);
+app.get("/get-user",authenticateToken,async (req, res) => {
+  const {userId} = req.user
+  const isUser = await User.findOne({_id:userId})
+
+  if(!isUser){
+    return res.sendStatus(401);
+  }
+
+  console.log(isUser)
+
+  return res.json({
+    user: isUser,
+    message: "",
+  })
+})
+
+
+app.listen(8000, () => {
+  console.log("✨ Magic happens on port 8000 ✨");
+});
 module.exports = app;
