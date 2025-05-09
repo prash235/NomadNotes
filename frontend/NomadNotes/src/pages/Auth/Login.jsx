@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PasswordInput from "../../components/inputs/PasswordInput";
 import { validateEmail } from "../../utils/Helper";
-import handleLoginApi from "../../utils/AxiosInstance"; 
+import {handleLogin as handleLoginApi} from "../../utils/AxiosInstance"; 
 const Login = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -96,7 +96,7 @@ const Login = () => {
             <button
               type="button"
               className="btn-primary btn-light"
-              onClick={() => navigate("/signUp")}
+              onClick={() => navigate("/signup")}
             >
               CREATE ACCOUNT
             </button>
