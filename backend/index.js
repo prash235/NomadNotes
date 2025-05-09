@@ -14,7 +14,7 @@ const path = require("path")
 const app = express();
 app.use(express.json());
 
-app.use(cors({ origin: "*" }));
+app.use(cors());
 
 const User = require("./models/user.model");
 const TravelStory = require("./models/travelStory.model")
