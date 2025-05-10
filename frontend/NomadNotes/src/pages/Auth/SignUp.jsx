@@ -114,7 +114,7 @@ const signUp = () => {
             <button
               type="button"
               className="btn-primary btn-light"
-              onClick={() => navigate("/signUp")}
+              onClick={() => navigate("/login")}
             >
               LOGIN
             </button>

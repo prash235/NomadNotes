@@ -35,3 +35,22 @@ export const handleSignUp = async (fullName,email,password) => {
   };
 
 
+  export const handleGetUser = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.get(`${BASE_URL}/get-user`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Get User API error:", error);
+      throw error;
+    }
+  };
+
+
+
+
+
