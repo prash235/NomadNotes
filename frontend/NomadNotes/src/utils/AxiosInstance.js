@@ -85,6 +85,50 @@ export const handleSignUp = async (fullName,email,password) => {
     }
   };
 
+  export const uploadImage = async (file) => {
+    const formData = new FormData();
+    formData.append("image", file); 
+    try {
+      const response = await axios.post(`${BASE_URL}/image-upload`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+  
+      return response.data;
+    } catch (error) {
+      console.error("Image upload failed:", error);
+      throw error;
+    }
+  };
+
+  export const addNewTravelStory = async (title, story, imageUrl, visitedLocation, visitedDate) => {
+    try {
+      const response = await axios.post(
+        `${BASE_URL}/add-travel-story`,
+        {
+          title,
+          story,
+          imageUrl,
+          visitedLocation,
+          visitedDate,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      console.log("add travel story response----", response)
+  
+      return response.data;
+    } catch (error) {
+      console.error("Login API error:", error);
+      throw error;
+    }
+  };
+  
+
 
 
 

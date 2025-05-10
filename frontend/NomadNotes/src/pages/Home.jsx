@@ -130,7 +130,7 @@ const Home = () => {
           type={openAddEditModal.type}
           storyInfo={openAddEditModal.data}
           onClose={() => {
-            setOpenAddEditModal({isShown:false, type: add, data: null});
+            setOpenAddEditModal({isShown:false, type: "add", data: null});
           }}
           getAllTravelStories={getAllTravelStories}
           />

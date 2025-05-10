@@ -116,14 +116,14 @@ app.get("/get-user",authenticateToken,async (req, res) => {
 })
 
 app.post("/add-travel-story",authenticateToken,async (req, res) => {
-  const { title, story, visitedLocation, imageUrl, visiteDate} = req.body;
+  const { title, story, visitedLocation, imageUrl, visitedDate} = req.body;
   const {userId} = req.user;
 
-  if (!title || !story || !visitedLocation || !imageUrl || !visiteDate) {
+  if (!title || !story || !visitedLocation || !imageUrl || !visitedDate) {
     res.status(400).json({ error: true, message: "All fields are mandatory" });
   }
 
-  const parsedVisitedDate = new Date(parseInt(visiteDate));
+  const parsedVisitedDate = new Date(parseInt(visitedDate));
 
   try {
     

@@ -3,6 +3,9 @@ import { MdAdd, MdClose, MdDeleteOutline, MdUpdate } from 'react-icons/md';
 import DateSelector from '../Input/DateSelector';
 import ImageSelector from '../Input/ImageSelector';
 import TagInput from '../Input/TagInput';
+import { uploadImage as uploadImageApi, addNewTravelStory as addNewTravelStoryApi} from '../utils/AxiosInstance';
+import moment from 'moment';
+import { toast } from 'react-toastify';
 
 const AddEditTravelStory = ({
   storyInfo,
@@ -10,14 +13,73 @@ const AddEditTravelStory = ({
   onClose,
   getAllTravelStories,
 }) => {
-    const [title, setTitle] = useState("")
+    const [title, setTitle] = useState("");
     const [storyImg, setStoryImg] = useState(null);
     const [story, setStory] = useState("");
-    const [visitedLocation, setVisitedLocation] = useState([])
-  const [visitedDate, setVisitedDate] = useState(null);
+    const [visitedLocation, setVisitedLocation] = useState([]);
+    const [visitedDate, setVisitedDate] = useState(null);
+    const [error, setError] = useState(null);
+
+    const addNewTravelStory = async () => {
+
+        try {
+
+            let imageUrl = "";
+
+            if(storyImg){
+                const imgUploadRes = await uploadImageApi(storyImg);
+                console.log("IMAGE UPLOAD RESPONSE ====>",imgUploadRes)
+                imageUrl = imgUploadRes.imageURL || "";
+            }
+
+            const response = await addNewTravelStoryApi(
+                title,
+                story,
+                imageUrl || "",
+                visitedLocation,
+                visitedDate ? moment(visitedDate).valueOf() : moment().valueOf()
+              );
+              
+            console.log("ADD NEW TRAVEL STORY RESPONSE ====>", response);
+
+        if(response && response.story)
+            toast.success("Story added successfully");
+            getAllTravelStories();
+            onClose();
+            
+        } catch (error) {
+            console.log("error",error);
+        }
+
+    }
+
+    const updateTravelStory = async () => {
+
+    }
+  
 
   const handleAddOrUpdateClick = () => {
-    // logic here
+    console.log("input data", {title,storyImg, story, visitedLocation, visitedDate});
+
+    if(!title){
+        setError("Please Enter the Title");
+        return;
+    }
+
+    if(!story){
+        setError("Please enter the story");
+        return;
+    }
+
+    setError("");
+
+    if(type === "edit"){
+        updateTravelStory();
+    } else {
+        addNewTravelStory();
+    }
+
+
   };
 
   const handleDeleteStoryImg = async () => {
@@ -34,7 +96,7 @@ const AddEditTravelStory = ({
 
         <div className="flex flex-wrap items-center gap-2 sm:gap-3 bg-cyan-50/50 p-2 rounded-lg">
           {type === 'add' ? (
-            <button className="btn-small" onClick={() => {}}>
+            <button className="btn-small" onClick={handleAddOrUpdateClick}>
               <MdAdd className="text-lg" />
               <span className="ml-1">ADD STORY</span>
             </button>
@@ -55,7 +117,12 @@ const AddEditTravelStory = ({
           <button className="" onClick={onClose}>
             <MdClose className="text-xl text-slate-400" />
           </button>
+          {error && (
+            <p className='text-red-500 text-xs pt-2 text-right'>{error}</p>
+        )}
         </div>
+
+        
       </div>
 
       {/* Content */}
