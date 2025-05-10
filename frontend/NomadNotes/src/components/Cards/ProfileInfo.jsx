@@ -2,29 +2,26 @@ import React from "react";
 import { getInitials } from "../../utils/Helper";
 
 const ProfileInfo = ({ userInfo, onLogout }) => {
-
-    // console.log("USERINFO", userInfo)
   return (
-
     userInfo && (
+      <div className="flex items-center gap-3">
+        {/* Avatar */}
+        <div className="min-w-[48px] min-h-[48px] w-12 h-12 flex items-center justify-center rounded-full bg-slate-100 text-slate-950 font-semibold text-lg">
+          {getInitials(userInfo?.fullName || "")}
+        </div>
 
-        <div className="flex items-center gap-3 ">
-      <div className="w-12 h-12 flex items-center justify-center rounded-full text-slate-950 font-medium bg-slate-100">
-        {getInitials(userInfo?.fullName || "")}
+        {/* Name & Logout */}
+        <div className="flex flex-col items-start">
+          <p className="text-sm font-medium leading-tight">{userInfo?.fullName || ""}</p>
+          <button
+            className="text-xs text-blue-600 hover:underline mt-1"
+            onClick={onLogout}
+          >
+            Logout
+          </button>
+        </div>
       </div>
-
-      
-
-      <div>
-        <p className="text-sm font-medium">{userInfo?.fullName || ""}</p>
-        <button className="text-sm text-slate-700 underline" onClick={onLogout}>
-          Logout
-        </button>
-      </div>
-    </div>
-
     )
-    
   );
 };
 

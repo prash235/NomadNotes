@@ -35,6 +35,20 @@ const Home = () => {
     }
   };
 
+  // handle edit story
+
+  const handleEdit = (data) => {
+
+  }
+
+  const handleViewStory = (data) => {
+
+  }
+
+  const updateIsFavourite = (data) => {
+
+  }
+
   useEffect(() => {
     getUserInfo();
     getAllTravelStories();
@@ -45,24 +59,37 @@ const Home = () => {
     <>
       <Navbar userInfo={userInfo} />
 
-      <div className="container mx-auto py-10">
-        <div className="flex gap-7">
-          <div className="flex-1">
-            {allStories.length > 0 ? (
-              <div className="grid grid-cols-2 gap-4">
-                {allStories.map((item) => {
-                  return ( <TravelStoryCard key={item._id} />);
-                })}
-              </div>
-            ) : (
-              <>empty card here</>
-            )}
-          </div>
-          <div className="w-[320px]">
-            {/* Sidebar or additional content goes here */}
-          </div>
+      <div className="container mx-auto px-4 md:px-8 py-6 md:py-10">
+  <div className="flex flex-col lg:flex-row gap-6">
+    <div className="flex-1">
+      {allStories.length > 0 ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {allStories.map((item) => (
+            <TravelStoryCard
+              key={item._id}
+              imageUrl={item.imageUrl}
+              title={item.title}
+              story={item.story}
+              date={item.visitedDate}
+              visitedLocation={item.visitedLocation}
+              isFavourite={item.isFavourite}
+              onEdit={() => handleEdit(item)}
+              onClick={() => handleViewStory(item)}
+              onFavouriteClick={() => updateIsFavourite(item)}
+            />
+          ))}
         </div>
-      </div>
+      ) : (
+        <div className="text-gray-500">No stories available.</div>
+      )}
+    </div>
+
+    <div className="w-full lg:w-[320px]">
+      {/* Sidebar or additional content */}
+    </div>
+  </div>
+</div>
+
     </>
   );
 };
