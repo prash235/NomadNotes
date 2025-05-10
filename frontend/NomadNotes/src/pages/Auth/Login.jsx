@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import PasswordInput from "../../components/inputs/PasswordInput";
+import PasswordInput from "../../Input/PasswordInput";
 import { validateEmail } from "../../utils/Helper";
 import {handleLogin as handleLoginApi} from "../../utils/AxiosInstance"; 
 const Login = () => {

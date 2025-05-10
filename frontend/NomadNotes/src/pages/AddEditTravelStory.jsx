@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { MdAdd, MdClose, MdDeleteOutline, MdUpdate } from 'react-icons/md';
 import DateSelector from '../Input/DateSelector';
+import ImageSelector from '../Input/ImageSelector';
+import TagInput from '../Input/TagInput';
 
 const AddEditTravelStory = ({
   storyInfo,
@@ -18,6 +20,10 @@ const AddEditTravelStory = ({
     // logic here
   };
 
+  const handleDeleteStoryImg = async () => {
+
+  }
+
   return (
     <div className="w-full max-w-3xl mx-auto p-4 sm:p-6 bg-white shadow rounded-md">
       {/* Header */}
@@ -27,7 +33,7 @@ const AddEditTravelStory = ({
         </h5>
 
         <div className="flex flex-wrap items-center gap-2 sm:gap-3 bg-cyan-50/50 p-2 rounded-lg">
-          {type === 'edit' ? (
+          {type === 'add' ? (
             <button className="btn-small" onClick={() => {}}>
               <MdAdd className="text-lg" />
               <span className="ml-1">ADD STORY</span>
@@ -76,7 +82,7 @@ const AddEditTravelStory = ({
           </div>
         </div>
 
-        
+        <ImageSelector image={storyImg} setImage={setStoryImg} handleDeleteImg={handleDeleteStoryImg} />
         <div className='flex flex-col gap-2 mt-4'>
             <label className='input-labe'>STORY</label>
             <textarea
@@ -87,6 +93,12 @@ const AddEditTravelStory = ({
             value={story}
             onChange={({target}) => setStory(target.value)}
             />
+
+        </div>
+
+        <div className='pt-3'>
+            <label className='input-label'>VISITED LOCATION</label>
+            <TagInput tags={visitedLocation} setTags={setVisitedLocation} />
 
         </div>
       </div>
