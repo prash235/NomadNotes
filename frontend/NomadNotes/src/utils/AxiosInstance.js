@@ -50,6 +50,21 @@ export const handleSignUp = async (fullName,email,password) => {
     }
   };
 
+  export const handleGetAllStories = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.get(`${BASE_URL}/get-all-stories`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Get All Stories API error:", error);
+      throw error;
+    }
+  };
+
 
 
 
