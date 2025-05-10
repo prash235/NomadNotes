@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import { useNavigate } from "react-router-dom";
-import { handleGetAllStories, handleGetUser } from "../utils/AxiosInstance";
+import { handleGetAllStories, handleGetUser, updateIsFavourite as updateIsFavouriteAPI  } from "../utils/AxiosInstance";
 import TravelStoryCard from "../components/Cards/TravelStoryCard";
 
 const Home = () => {
@@ -13,7 +13,7 @@ const Home = () => {
   const getAllTravelStories = async () => {
     try {
       const response = await handleGetAllStories();
-      console.log("RSP--->", response);
+      // console.log("RSP--->", response);
       if (response && response.stories) {
         setAllStoreis(response?.stories);
       }
@@ -45,7 +45,26 @@ const Home = () => {
 
   }
 
-  const updateIsFavourite = (data) => {
+  const updateIsFavourite = async (data) => {
+
+    const storyId = data._id;
+    const isFavourite = data.isFavourite
+
+    try {
+
+      const response = await updateIsFavouriteAPI(storyId, isFavourite )
+
+      console.log("isfavourite resp----->>>", response);
+
+      if(response && response.story){
+        getAllTravelStories();
+      }
+      
+      
+    } catch (error) {
+      console.error("An unexpected error occurred. Please try again.");
+      
+    }
 
   }
 

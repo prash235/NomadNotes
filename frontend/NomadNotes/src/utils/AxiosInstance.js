@@ -65,6 +65,29 @@ export const handleSignUp = async (fullName,email,password) => {
     }
   };
 
+  export const updateIsFavourite = async (id, currentIsFavourite) => {
+    try {
+        const isFavourite = !currentIsFavourite;
+      const response = await axios.put(
+        `${BASE_URL}/update-is-favourite/${id}`,
+        { isFavourite },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`, // Attach token if necessary
+          },
+        }
+      );
+  
+      return response.data; // You can handle this response as needed
+    } catch (error) {
+      console.error("Error updating favourite status:", error);
+      throw error; // You can handle this error further depending on your needs
+    }
+  };
+
+
+
+
 
 
 
