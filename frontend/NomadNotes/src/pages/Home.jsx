@@ -21,6 +21,7 @@ import EmptyCard from "../components/Cards/EmptyCard";
 import EmptyImg from "../assets/images/add-story.jpg"
 import { Day, DayPicker } from "react-day-picker";
 import moment from "moment";
+import FilterInfoTitle from "../components/Cards/FilterInfoTitle";
 const Home = () => {
   const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState(null);
@@ -164,6 +165,12 @@ const Home = () => {
     console.log("Day Selected: ", day); // Check what day.from and day.to contain
     filterStoriesByDate(day);
   }
+
+  const resetFilter = () => {
+    setDateRange({from:null, to:null});
+    setFilterType("");
+    getAllTravelStories();
+  }
  
   useEffect(() => {
     getUserInfo();
@@ -182,6 +189,14 @@ const Home = () => {
       />
 
       <div className="container mx-auto px-4 md:px-8 py-6 md:py-10">
+        <FilterInfoTitle
+        filterType={filterType}
+        filterDates={dateRange}
+        onClear={() => {
+          resetFilter();
+        }}
+        />
+        
         <div className="flex flex-col lg:flex-row gap-6">
           <div className="flex-1">
             {allStories.length > 0 ? (
