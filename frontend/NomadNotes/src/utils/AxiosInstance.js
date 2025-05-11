@@ -178,6 +178,42 @@ export const handleSignUp = async (fullName,email,password) => {
     }
   };
 
+  export const searchTravelStoriesApi = async (query) => {
+    try {
+      const response = await axios.get(`${BASE_URL}/search`, {
+        params: { query },
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+  
+      console.log("Search results:", response.data);
+      return response.data;
+    } catch (error) {
+      console.error("Search API error:", error.response?.data || error.message);
+      throw error;
+    }
+  };
+
+  export const getFilteredStoriesByDate = async (startDate, endDate) => {
+    try {
+      const response = await axios.get(`${BASE_URL}/travel-stories/filter`, {
+        params: {
+          startDate: startDate,  // Unix timestamp of the start date
+          endDate: endDate,      // Unix timestamp of the end date
+        },
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`, // Add token from localStorage or context
+        },
+      });
+      
+      return response.data;  // This will return the stories fetched from the API
+    } catch (error) {
+      console.error("Error fetching filtered travel stories:", error.response?.data || error.message);
+      throw error;  // You can handle this error further depending on your needs
+    }
+  };
+
 
 
 

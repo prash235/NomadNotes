@@ -6,7 +6,9 @@ import {
   handleGetAllStories,
   handleGetUser,
   updateIsFavourite as updateIsFavouriteAPI,
-  deleteTravelStory as deleteTravelStoryApi
+  deleteTravelStory as deleteTravelStoryApi,
+  searchTravelStoriesApi,
+  getFilteredStoriesByDate
 } from "../utils/AxiosInstance";
 import TravelStoryCard from "../components/Cards/TravelStoryCard";
 import Modal from "react-modal";
@@ -17,10 +19,17 @@ import ViewTravelStory from "./ViewTravelStory";
 import EmptyCard from "../components/Cards/EmptyCard";
 
 import EmptyImg from "../assets/images/add-story.jpg"
+import { Day, DayPicker } from "react-day-picker";
+import moment from "moment";
 const Home = () => {
   const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState(null);
-  const [allStories, setAllStoreis] = useState([]);
+  const [allStories, setAllStories] = useState([]);
+
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filterType, setFilterType] = useState("");
+
+  const [dateRange, setDateRange] = useState({from : null, to: null});
 
   const [openAddEditModal, setOpenAddEditModal] = useState({
     isShown:false,
@@ -39,7 +48,7 @@ const Home = () => {
       const response = await handleGetAllStories();
       // console.log("RSP--->", response);
       if (response && response.stories) {
-        setAllStoreis(response?.stories);
+        setAllStories(response?.stories);
       }
     } catch (error) {
       console.error("An unexpected error occurred. Try again.");
@@ -108,6 +117,54 @@ const Home = () => {
     }
   };
 
+  const onSearchStory = async (query) => {
+    try {
+      const response = await searchTravelStoriesApi(query);
+      
+    if(response && response.stories){
+      setFilterType("search");
+      setAllStories(response.stories);
+    }
+      
+    } catch (error) {
+      console.error("An unexpected error occurred. Try again.");
+    }
+  }
+
+  const handleClearSearch = () => {
+      setFilterType("")
+      getAllTravelStories();
+  }
+
+  const filterStoriesByDate = async (day) => {
+    try {
+
+      console.log("Day Selected:==========>", day);
+
+      const startDate = day.from ? moment(day.from).startOf('day').valueOf() : null;
+  const endDate = day.to ? moment(day.to).endOf('day').valueOf() : null;
+      console.log("start and end ", startDate, endDate)
+
+      if (startDate && endDate) {
+        const response = await getFilteredStoriesByDate(startDate, endDate);
+        console.log("response date", response)
+
+        if (response && response.stories) {
+          setFilterType("date");
+          setAllStories(response.stories);
+        }
+      }
+    } catch (error) {
+      console.error("An unexpected error occurred. Try again.");
+    }
+  };
+
+  const handleDayClick = (day) => {
+    setDateRange(day);
+    console.log("Day Selected: ", day); // Check what day.from and day.to contain
+    filterStoriesByDate(day);
+  }
+ 
   useEffect(() => {
     getUserInfo();
     getAllTravelStories();
@@ -116,12 +173,18 @@ const Home = () => {
 
   return (
     <>
-      <Navbar userInfo={userInfo} />
+      <Navbar
+        userInfo={userInfo}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        onSearchNote={onSearchStory}
+        handleClearSearch={handleClearSearch}
+      />
 
       <div className="container mx-auto px-4 md:px-8 py-6 md:py-10">
         <div className="flex flex-col lg:flex-row gap-6">
           <div className="flex-1">
-            {allStories.length > 0 ?  (
+            {allStories.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {allStories.map((item) => (
                   <TravelStoryCard
@@ -138,13 +201,29 @@ const Home = () => {
                   />
                 ))}
               </div>
-            ) :(
-              <EmptyCard imgSrc={EmptyImg} message="Start creating your first travel story. Click the Add button" />
-            )  }
+            ) : (
+              <EmptyCard
+                imgSrc={EmptyImg}
+                message="Start creating your first travel story. Click the Add button"
+              />
+            )}
           </div>
 
           <div className="w-full lg:w-[320px]">
-            {/* Sidebar or additional content */}
+            <div className="bg-white border border-slate-200 shadow-lg shadow-slate-200/60 rounded-lg">
+
+            <div className="p-3">
+              <DayPicker
+              captionLayout="dropdown-buttons"
+              mode="range"
+              selected={dateRange}
+              onSelect={handleDayClick}
+              pagedNavigation
+              />
+
+            </div>
+            
+            </div>
           </div>
         </div>
 
@@ -185,10 +264,16 @@ const Home = () => {
           <ViewTravelStory
             storyInfo={openViewModal.data || null}
             onClose={() => {
-              setOpenViewModal((prevState) => ({...prevState, isShown:false}));
+              setOpenViewModal((prevState) => ({
+                ...prevState,
+                isShown: false,
+              }));
             }}
             onEditClick={() => {
-              setOpenViewModal((prevState) => ({...prevState, isShown:false}));
+              setOpenViewModal((prevState) => ({
+                ...prevState,
+                isShown: false,
+              }));
               handleEdit(openViewModal.data || null);
             }}
             onDeleteClick={() => {

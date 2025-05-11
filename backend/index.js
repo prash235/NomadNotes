@@ -269,6 +269,9 @@ try {
   const start = new Date(parseInt(startDate));
   const end = new Date(parseInt(endDate));
 
+  console.log("Start Date:", start, "End Date:", end);
+
+
   const filteredStories = await TravelStory.find({
     userId : userId,
     visitedDate : {$gte: start, $lte: end},
