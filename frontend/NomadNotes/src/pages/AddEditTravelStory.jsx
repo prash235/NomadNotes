@@ -6,6 +6,7 @@ import TagInput from "../Input/TagInput";
 import {
   uploadImage as uploadImageApi,
   addNewTravelStory as addNewTravelStoryApi,
+  editTravelStory
 } from "../utils/AxiosInstance";
 import moment from "moment";
 import { toast } from "react-toastify";
@@ -51,7 +52,33 @@ const AddEditTravelStory = ({
     }
   };
 
-  const updateTravelStory = async () => {};
+
+  const updateTravelStory = async () => {
+    try {
+      let imageUrl = storyInfo.imageUrl;
+  
+      if (storyImg && storyImg !== storyInfo.imageUrl) {
+        const imgUploadRes = await uploadImageApi(storyImg);
+        imageUrl = imgUploadRes.imageURL || storyInfo.imageUrl;
+      }
+  
+      const response = await editTravelStory(
+        storyInfo._id,
+        title,
+        story,
+        imageUrl,
+        visitedLocation,
+        visitedDate ? moment(visitedDate).valueOf() : moment().valueOf()
+      );
+  
+      if (response && response.story) toast.success("Story updated successfully");
+      getAllTravelStories();
+      onClose();
+    } catch (error) {
+      console.error("Error updating story:", error);
+    }
+  };
+  
 
   const handleAddOrUpdateClick = () => {
     console.log("input data", {

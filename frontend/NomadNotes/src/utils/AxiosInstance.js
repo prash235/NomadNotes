@@ -127,6 +127,39 @@ export const handleSignUp = async (fullName,email,password) => {
       throw error;
     }
   };
+
+  export const editTravelStory = async (
+    id,
+    title,
+    story,
+    imageUrl,
+    visitedLocation,
+    visitedDate
+  ) => {
+    try {
+      const response = await axios.post(
+        `${BASE_URL}/edit-story/${id}`,
+        {
+          title,
+          story,
+          imageUrl,
+          visitedLocation,
+          visitedDate,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+  
+      console.log("Edit Travel Story Response ====>", response);
+      return response.data;
+    } catch (error) {
+      console.error("Edit Travel Story API Error:", error);
+      throw error;
+    }
+  };
   
 
 
