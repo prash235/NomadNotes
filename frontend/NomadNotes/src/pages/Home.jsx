@@ -22,6 +22,7 @@ import EmptyImg from "../assets/images/add-story.jpg"
 import { Day, DayPicker } from "react-day-picker";
 import moment from "moment";
 import FilterInfoTitle from "../components/Cards/FilterInfoTitle";
+import { getEmptyCardMessage } from "../utils/Helper";
 const Home = () => {
   const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState(null);
@@ -95,7 +96,15 @@ const Home = () => {
 
       if (response && response.story) {
         toast.success("Story updated successfully!");
-        getAllTravelStories();
+
+        if(filterType === "search" && searchQuery){
+          onSearchStory(searchQuery)
+        } else if(filterType === "date"){
+          filterStoriesByDate(dateRange);
+        } else{
+          getAllTravelStories();
+
+        }
       }
     } catch (error) {
       console.error("An unexpected error occurred. Please try again.");
@@ -219,7 +228,7 @@ const Home = () => {
             ) : (
               <EmptyCard
                 imgSrc={EmptyImg}
-                message="Start creating your first travel story. Click the Add button"
+                message={getEmptyCardMessage(filterType)}
               />
             )}
           </div>
