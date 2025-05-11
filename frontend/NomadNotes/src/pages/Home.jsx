@@ -14,7 +14,9 @@ import { ToastContainer,toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AddEditTravelStory from "./AddEditTravelStory";
 import ViewTravelStory from "./ViewTravelStory";
+import EmptyCard from "../components/Cards/EmptyCard";
 
+import EmptyImg from "../assets/images/add-story.jpg"
 const Home = () => {
   const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState(null);
@@ -119,7 +121,7 @@ const Home = () => {
       <div className="container mx-auto px-4 md:px-8 py-6 md:py-10">
         <div className="flex flex-col lg:flex-row gap-6">
           <div className="flex-1">
-            {allStories.length > 0 ? (
+            {allStories.length > 0 ?  (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {allStories.map((item) => (
                   <TravelStoryCard
@@ -136,9 +138,9 @@ const Home = () => {
                   />
                 ))}
               </div>
-            ) : (
-              <div className="text-gray-500">No stories available.</div>
-            )}
+            ) :(
+              <EmptyCard imgSrc={EmptyImg} message="Start creating your first travel story. Click the Add button" />
+            )  }
           </div>
 
           <div className="w-full lg:w-[320px]">
