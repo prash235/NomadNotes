@@ -160,7 +160,23 @@ export const handleSignUp = async (fullName,email,password) => {
       throw error;
     }
   };
+
   
+  export const deleteTravelStory = async (id) => {
+    try {
+      const response = await axios.delete(`${BASE_URL}/delete-story/${id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`, // Add token from localStorage or context
+        },
+      });
+      
+      console.log("Travel Story deleted successfully:", response.data);
+      return response.data;  // You can use this data for further actions like showing a success message
+    } catch (error) {
+      console.error("Error deleting travel story:", error.response?.data || error.message);
+      throw error; // You can handle this error further depending on your needs
+    }
+  };
 
 
 

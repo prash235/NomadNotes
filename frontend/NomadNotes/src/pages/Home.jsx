@@ -6,6 +6,7 @@ import {
   handleGetAllStories,
   handleGetUser,
   updateIsFavourite as updateIsFavouriteAPI,
+  deleteTravelStory as deleteTravelStoryApi
 } from "../utils/AxiosInstance";
 import TravelStoryCard from "../components/Cards/TravelStoryCard";
 import Modal from "react-modal";
@@ -86,6 +87,22 @@ const Home = () => {
       }
     } catch (error) {
       console.error("An unexpected error occurred. Please try again.");
+    }
+  };
+
+  const deleteTravelStory = async (data) => {
+    const storyId = data._id;
+
+    try {
+      const response = await deleteTravelStoryApi(storyId);
+
+      if (response && !response.error) {
+        toast.error("Story deleted successfully");
+        setOpenViewModal((prevState) => ({ ...prevState, isShown: false }));
+        getAllTravelStories();
+      }
+    } catch (error) {
+      console.error("An unexpected error occurred. Try again.");
     }
   };
 
@@ -172,7 +189,9 @@ const Home = () => {
               setOpenViewModal((prevState) => ({...prevState, isShown:false}));
               handleEdit(openViewModal.data || null);
             }}
-            onDeleteClick={() => {}}
+            onDeleteClick={() => {
+              deleteTravelStory(openViewModal.data || null);
+            }}
           />
         </Modal>
 

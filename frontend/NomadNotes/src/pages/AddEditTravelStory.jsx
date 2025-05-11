@@ -57,9 +57,16 @@ const AddEditTravelStory = ({
     try {
       let imageUrl = storyInfo.imageUrl;
   
+      // If a new image is uploaded and it's different from the current image
       if (storyImg && storyImg !== storyInfo.imageUrl) {
         const imgUploadRes = await uploadImageApi(storyImg);
         imageUrl = imgUploadRes.imageURL || storyInfo.imageUrl;
+      }
+  
+      // Check if the imageUrl is still empty, throw an error if so
+      if (!imageUrl || imageUrl.trim() === "") {
+        throw new Error("Please upload the image");
+        // toast.error("Please upload the image");
       }
   
       const response = await editTravelStory(
@@ -76,8 +83,10 @@ const AddEditTravelStory = ({
       onClose();
     } catch (error) {
       console.error("Error updating story:", error);
+      toast.error(error.message || "Error updating story.");
     }
   };
+  
   
 
   const handleAddOrUpdateClick = () => {
